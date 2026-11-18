@@ -1,0 +1,94 @@
+﻿<Window x:Class="SuperheroesConvertidoresMVVM.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SuperheroesConvertidoresMVVM"
+        xmlns:conv="clr-namespace:SuperheroesConvertidoresMVVM.Converters"
+        xmlns:vm="clr-namespace:SuperheroesConvertidoresMVVM.ViewModels"
+        d:DataContext="{d:DesignInstance Type=vm:MainWindowVM, IsDesignTimeCreatable=False}"
+        mc:Ignorable="d"
+        Title="Superhéroes SOLUCIÓN con CONVERTIDORES y utilizando Patrón MVVM"
+        Height="700"
+        Width="1000"
+        MinHeight="500"
+        MinWidth="700"
+        Background="AliceBlue"
+        WindowStartupLocation="CenterScreen"
+        >
+    
+    <!-- 
+         El establecimiento del DataContext se realiza en App.xaml.cs al iniciar la aplicación, 
+         lo que permite que la vista esté vinculada al ViewModel en tiempo de ejecución.
+              
+         En tiempo de diseño, se utiliza "d:DataContext" para proporcionar un contexto de datos al 
+         diseñador de Visual Studio que evite errores a la hora de realizar "bindings" en el XAML.
+    -->
+        
+    <Window.Resources>
+        <!-- Convertidores-->
+        <conv:FondoConverter x:Key="conversorFondo"/>
+        <conv:VisibilityConverter x:Key="conversorVisibilidad"/>
+
+        <!-- Estilos definidos en "Styles/Estilos.xaml", es un diccionario de estilos. -->
+        <!-- ... -->
+    </Window.Resources>
+
+    <DockPanel x:Name="superheroeDockPanel"
+                       Background="{Binding Path=HeroeActual.Heroe, Converter={StaticResource conversorFondo}}">
+
+        <DockPanel LastChildFill="False" DockPanel.Dock="Top">
+
+            <TextBlock DockPanel.Dock="Left" Style="{StaticResource nombreHéroeVista}"
+                       Text="{Binding Path=HeroeActual.Nombre}">
+            </TextBlock>
+
+            <StackPanel Orientation="Horizontal"
+                                DockPanel.Dock="Right"
+                                VerticalAlignment="Bottom">
+                <Image Source="../Assets/avengers.png"
+                               Visibility="{Binding Path=HeroeActual.Vengador,Converter={StaticResource conversorVisibilidad}}"
+                               Width="40"
+                               Margin="0,0,10,0"></Image>
+                <Image Source="../Assets/xmen.png"
+                               Visibility="{Binding Path=HeroeActual.Xmen,Converter={StaticResource conversorVisibilidad}}"
+                               Width="60"></Image>
+            </StackPanel>
+        </DockPanel>
+
+        <StackPanel DockPanel.Dock="Bottom"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Center">
+ 
+            <Button Width="25" Height="25" Command="{Binding AnteriorCommand}">
+                <Image x:Name="leftImage" Style="{StaticResource flechas}"/>
+            </Button>
+            
+            <TextBlock x:Name="actualTextBlock"
+                       Text="{Binding Actual}"
+                               Style="{StaticResource contador}"
+                               Margin="5,0,0,5"/>
+            <TextBlock Style="{StaticResource contador}"
+                               Text="/"
+                               Margin="0,0,0,5"/>
+            <TextBlock x:Name="totalTextBlock"
+                       Text="{Binding Total}"
+                               Style="{StaticResource contador}"
+                               Margin="0,0,5,5"/>
+            
+            <Button Width="25" Height="25" Command="{Binding SiguienteCommand}">
+                <Image x:Name="rightImage" Style="{StaticResource flechas}"
+                     RenderTransformOrigin="0.5,0.5">
+                    <Image.RenderTransform>
+                        <RotateTransform Angle="180"/>
+                    </Image.RenderTransform>
+                </Image>
+            </Button>
+            
+        </StackPanel>
+
+        <Image Source="{Binding Path=HeroeActual.ImagenRuta}"
+                       Stretch="Fill"
+                       Margin="10"/>
+    </DockPanel>
+</Window>
